@@ -25,6 +25,7 @@ const InputSample = () => {
       nickname: ''
     })
     nameInput.current.focus();
+    console.log(nameInput)
   }
 
   return (

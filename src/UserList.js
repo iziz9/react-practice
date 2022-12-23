@@ -2,7 +2,6 @@ import React from 'react'
 
 
 
-
 const User = ({ user }) => {
   return (
     <div>
@@ -12,33 +11,15 @@ const User = ({ user }) => {
   )
 }
 
-const UserList = () => {
-  const users = [
-    {
-      id: 1,
-      username: 'velopert',
-      email: 'public.velopert@gmail.com'
-    },
-    {
-      id: 2,
-      username: 'tester',
-      email: 'tester@example.com'
-    },
-    {
-      id: 3,
-      username: 'liz',
-      email: 'liz@example.com'
-    }
-  ];
+function UserList({ users }) {
   return (
     <div>
       {users.map(user => (
-        <User user={user} />
+        <User user={user} key={user.id} />
       ))}
     </div>
   );
 }
-
 
 
 
