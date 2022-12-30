@@ -2,11 +2,12 @@ import React, { useEffect } from 'react'
 
 
 
-const User = ({ user, onRemove, onToggle, onEdit }) => {
+const User = React.memo(function User({ user, onRemove, onToggle }) {
 
-  useEffect(() => {
-    console.log(user);
-  })
+  // useEffect(() => {
+  //   console.log(user);
+  // })
+  console.log("앵")
 
   return (
     <div>
@@ -21,16 +22,16 @@ const User = ({ user, onRemove, onToggle, onEdit }) => {
       </b>
       <span>({user.email})</span>
       <button onClick={() => onRemove(user.id)}>삭제</button>
-      <button onClick={() => onEdit(user)}>수정</button>
+      {/* <button onClick={() => onEdit(user)}>수정</button> */}
     </div>
   )
-}
+});
 
-function UserList({ users, onRemove, onToggle, onEdit }) {
+function UserList({ users, onRemove, onToggle }) {
   return (
     <div>
       {users.map(user => (
-        <User user={user} key={user.id} onRemove={onRemove} onToggle={onToggle} onEdit={onEdit} />
+        <User user={user} key={user.id} onRemove={onRemove} onToggle={onToggle} />
       ))}
     </div>
   );
@@ -38,4 +39,4 @@ function UserList({ users, onRemove, onToggle, onEdit }) {
 
 
 
-export default UserList
+export default React.memo(UserList);

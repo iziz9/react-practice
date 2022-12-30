@@ -1,4 +1,4 @@
-import { useRef, useState, useMemo } from 'react';
+import { useRef, useState, useMemo, useCallback } from 'react';
 import './App.css';
 import Counter from './Counter';
 import CreateUser from './CreateUser';
@@ -19,17 +19,18 @@ function App() {
   const [inputs, setInputs] = useState({
     username: '',
     email: '',
-    id: ''
+    // id: ''
   })
 
-  const { username, email, id } = inputs;
-  const onChange = e => {
+  const { username, email } = inputs;
+
+  const onChange = useCallback(e => {
     const { name, value } = e.target;
-    setInputs({
+    setInputs(inputs => ({
       ...inputs,
       [name]: value
-    })
-  }
+    }));
+  }, []);
 
   const [users, setUsers] = useState([
     {
@@ -53,13 +54,14 @@ function App() {
   ]);
 
   const nextId = useRef(4)
-  const onCreate = () => {
+
+  const onCreate = useCallback(() => {
     const user = {
       id: nextId.current,
       username,
       email
     }
-    setUsers(users.concat(user))
+    setUsers(users => users.concat(user))
 
 
     setInputs({
@@ -67,35 +69,35 @@ function App() {
       email: ''
     })
     nextId.current += 1;
-  }
+  }, [username, email]);
 
-  const onRemove = id => {
-    setUsers(users.filter(user => user.id !== id))
+  const onRemove = useCallback(id => {
+    setUsers(users => users.filter(user => user.id !== id))
     //일치하지 않는 원소만 추출해 새 배열 만듦 (일치하면 제거)
-  }
+  }, []);
 
-  const onToggle = id => {
-    setUsers(users.map(user => user.id === id ? { ...user, active: !user.active } : user))
-  }
+  const onToggle = useCallback(id => {
+    setUsers(users => users.map(user => user.id === id ? { ...user, active: !user.active } : user))
+  }, []);
 
-  const onEdit = user => {
-    setInputs({
-      username: user.username,
-      email: user.email,
-      id: user.id
-    })
-  }
+  // const onEdit = useCallback(user => {
+  //   setInputs({
+  //     username: user.username,
+  //     email: user.email,
+  //     id: user.id
+  //   })
+  // }, []);
 
-  const onUpdate = () => {
-    setUsers(
-      users.map(user => user.id === id ? { ...user, username: username, email: email } : user)
-    )
-    setInputs({
-      username: '',
-      email: '',
-      id: ''
-    })
-  }
+  // const onUpdate = useCallback(() => {
+  //   setUsers(users =>
+  //     users.map(user => user.id === id ? { ...user, username: username, email: email } : user)
+  //   )
+  //   setInputs({
+  //     username: '',
+  //     email: '',
+  //     id: ''
+  //   })
+  // }, [users, username, email, id]);
   const count = useMemo(() => countActiveUsers(users), [users])
 
   return (
@@ -104,9 +106,8 @@ function App() {
         username={username}
         email={email}
         onChange={onChange}
-        onCreate={onCreate}
-        onUpdate={onUpdate} />
-      <UserList users={users} onRemove={onRemove} onToggle={onToggle} onEdit={onEdit} />
+        onCreate={onCreate} />
+      <UserList users={users} onRemove={onRemove} onToggle={onToggle} />
       <div>활성 사용자 수 : {count} </div>
     </>
     // <Wrapper>
